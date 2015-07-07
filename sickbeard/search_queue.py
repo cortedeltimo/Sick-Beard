@@ -136,7 +136,10 @@ class RSSSearchQueueItem(generic_queue.QueueItem):
             logger.log(u"No needed episodes found on the RSS feeds")
         else:
             for curResult in foundResults:
+                oldSbTORRENT_PATH = sickbeard.TORRENT_PATH
+                sickbeard.TORRENT_PATH = "/tmp/mnt/sdb3/TvShow/" + self.show.name + "/S%(seasonnumber)02d" % {'seasonnumber': self.segment}
                 search.snatchEpisode(curResult)
+                sickbeard.TORRENT_PATH = oldSbTORRENT_PATH
                 time.sleep(2)
 
         generic_queue.QueueItem.finish(self)
@@ -211,7 +214,10 @@ class BacklogQueueItem(generic_queue.QueueItem):
 
         # download whatever we find
         for curResult in results:
+            oldSbTORRENT_PATH = sickbeard.TORRENT_PATH
+            sickbeard.TORRENT_PATH = "/tmp/mnt/sdb3/TvShow/" + self.show.name + "/S%(seasonnumber)02d" % {'seasonnumber': self.segment}
             search.snatchEpisode(curResult)
+            sickbeard.TORRENT_PATH = oldSbTORRENT_PATH
             time.sleep(5)
 
         self.finish()
@@ -236,3 +242,4 @@ class BacklogQueueItem(generic_queue.QueueItem):
                 break
 
         return wantSeason
+
