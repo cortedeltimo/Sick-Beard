@@ -152,16 +152,24 @@ class KickAssProvider(generic.TorrentProvider):
             else:
                 SearchParameters["field"] = "time_add"
             
-            # Make sure the URL is correctly formatted by parsing it (defaults to using https URLs)
-            scheme, netloc, path, query, fragment = urlsplit(self.url, scheme="https")
-            # Make sure netloc is available, without a scheme in the parsed string it is 
-            # recognized as path without a netloc
-            if not netloc:
-                netloc = path
-            path = "json.php"
-            query = urllib.urlencode(SearchParameters)
-            searchURL = urlunsplit((scheme, netloc, path, query, fragment))
-            searchData = self.getURL(searchURL)
+            if len(sickbeard.KICKASS_ALT_URL):
+                self.url = sickbeard.KICKASS_ALT_URL
+                query = urllib.urlencode(SearchParameters)
+                searchURL = self.url + "json.php?" + query 
+                logger.log("[" + self.name + "] GV: Starting search using " + searchURL)
+                searchData = self.getURL(searchURL)
+            else:
+                # Make sure the URL is correctly formatted by parsing it (defaults to using https URLs)
+                #scheme, netloc, path, query, fragment = urlsplit(self.url, scheme="https")
+                # Make sure netloc is available, without a scheme in the parsed string it is 
+                # recognized as path without a netloc
+                if not netloc:
+                    netloc = path
+                path = "json.php"
+                query = urllib.urlencode(SearchParameters)
+                searchURL = urlunsplit((scheme, netloc, path, query, fragment))
+                logger.log("[" + self.name + "] GV: Starting search using " + searchURL)
+                searchData = self.getURL(searchURL)
 
             if searchData:
                 try:
