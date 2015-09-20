@@ -94,7 +94,7 @@ def sendTORRENT(torrent):
         
         if not magnet:
             try: 
-                headers = {'User-Agent': 'Mozilla'}    
+                headers = {'User-Agent': 'Mozilla', 'referer': torrent.url}    
                 r = session.get(torrent.url, verify=False, headers=headers)
                 logger.log("[Transmission] Succesfully Downloaded Torrent...", logger.DEBUG)
             except (requests.exceptions.ConnectionError, requests.exceptions.HTTPError), e:
